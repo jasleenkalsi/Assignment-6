@@ -105,8 +105,21 @@ document.addEventListener("DOMContentLoaded", function () {
         //... form submission logic including setting cookies and calculating score
     }
     function checkUsername() {
-        //... code for checking if a username cookie is set and adjusting the UI
+      //... code for checking if a username cookie is set and adjusting the UI
+      const username = getCookie("username");
+      const usernameInput = document.getElementById("username");
+      const newPlayerButton = document.getElementById("new-player");
+
+      if (username) {
+        usernameInput.classList.add("hidden");
+        newPlayerButton.classList.remove("hidden");
+    } else {
+        usernameInput.classList.remove("hidden");
+        newPlayerButton.classList.add("hidden");
     }
+}
+    
+
     function setCookie(name, value, days) {
         const expires = new Date(Date.now() + days * 86400000).toUTCString();
         document.cookie = `${name}=${value}; expires=${expires}; path=/`;
