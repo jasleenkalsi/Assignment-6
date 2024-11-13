@@ -102,19 +102,54 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
+        
         //... form submission logic including setting cookies and calculating score
+    const usernameInput = document.getElementById("username").value || "Anonymous";
+
+    if (!getCookie("username")) {
+        setCookie("username", usernameInput, 7); // Store username in cookie
     }
+
+       const score = calculateScore();
+       saveScore(getCookie("username"), score);
+       displayScores();
+       fetchQuestions(); 
+    }
+    
     function checkUsername() {
-        //... code for checking if a username cookie is set and adjusting the UI
+      //... code for checking if a username cookie is set and adjusting the UI
+      const username = getCookie("username");
+      const usernameInput = document.getElementById("username");
+      const newPlayerButton = document.getElementById("new-player");
+
+      if (username) {
+        usernameInput.classList.add("hidden");
+        newPlayerButton.classList.remove("hidden");
+    } else {
+        usernameInput.classList.remove("hidden");
+        newPlayerButton.classList.add("hidden");
     }
+}
+    
+
     function setCookie(name, value, days) {
-        //... code for setting a cookie
+        const expires = new Date(Date.now() + days * 86400000).toUTCString();
+        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+       
     }
     function getCookie(name) {
         //... code for retrieving a cookie
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+        return null;
     }
     function saveScore(username, score) {
         //... code for saving the score to localStorage
+        const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+        scores.push({ username, score });
+        localStorage.setItem("scores", JSON.stringify(scores));
+
     }
     function newPlayer() {
         //... code for clearing the username cookie and updating the UI
@@ -123,6 +158,14 @@ document.addEventListener("DOMContentLoaded", function () {
         //... code for calculating the score
     }
     function displayScores() {
-        //... code for displaying scores from localStorage
+        const scores = JSON.parse(localStorage.getItem("scores") || "[]");
+        const scoreTableBody = document.getElementById("score-table").querySelector("tbody");
+    
+        scoreTableBody.innerHTML = "";
+        scores.forEach((entry) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${entry.username}</td><td>${entry.score}</td>`;
+            scoreTableBody.appendChild(row);
+        });
     }
-});
+    
