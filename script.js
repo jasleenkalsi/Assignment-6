@@ -102,8 +102,20 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function handleFormSubmit(event) {
         event.preventDefault();
+        
         //... form submission logic including setting cookies and calculating score
+    const usernameInput = document.getElementById("username").value || "Anonymous";
+
+    if (!getCookie("username")) {
+        setCookie("username", usernameInput, 7); // Store username in cookie
     }
+
+       const score = calculateScore();
+       saveScore(getCookie("username"), score);
+       displayScores();
+       fetchQuestions(); 
+    }
+    
     function checkUsername() {
       //... code for checking if a username cookie is set and adjusting the UI
       const username = getCookie("username");
