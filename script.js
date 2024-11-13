@@ -108,10 +108,16 @@ document.addEventListener("DOMContentLoaded", function () {
         //... code for checking if a username cookie is set and adjusting the UI
     }
     function setCookie(name, value, days) {
-        //... code for setting a cookie
+        const expires = new Date(Date.now() + days * 86400000).toUTCString();
+        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+       
     }
     function getCookie(name) {
         //... code for retrieving a cookie
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+        return null;
     }
     function saveScore(username, score) {
         //... code for saving the score to localStorage
